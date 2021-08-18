@@ -1,0 +1,108 @@
+{% load static %}
+<style>
+.navbt:hover {
+  background-color: #42EECF;
+  color: white;
+}
+</style>
+  <!-- Sidenav -->
+  <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+    <div class="scrollbar-inner">
+      <!-- Brand -->
+      <div class="sidenav-header  align-items-center">
+        <a class="navbar-brand" href="javascript:void(0)">
+          <img src="{% static '/assets/img/brand/LogoAA.png' %}" class="navbar-brand-img" alt="...">
+        </a>
+      </div>
+      <div class="navbar-inner">
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+          <!-- nav nav-pills nav-fill flex-column flex-md-column -->
+          <ul class="nav nav-pills nav-fill flex-column flex-md-column" id="sidebarButtons">
+            <li class="nav-item mt-2 pr-0">
+              <a class="navbt nav-link {% if request.resolver_match.url_name == 'dashboard' %} active{% endif %} d-flex" href="{% url 'dashboard' %}">
+                <i class="ni ni-tv-2 text-dark px-4"></i>
+                <span class="nav-link-text">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item mt-2 pr-0">
+              <a class="navbt nav-link {% if request.resolver_match.url_name == 'daftar-hadir' %} active{% endif %} d-flex" href="{% url 'daftar-hadir' %}">
+                <i class="ni ni-bullet-list-67 text-dark px-4"></i>
+                <span class="nav-link-text">Daftar Hadir</span>
+              </a>
+            </li>
+            <li class="nav-item mt-2 pr-0">
+              <a class="navbt nav-link {% if request.resolver_match.url_name == 'list-pegawai' %} active{% endif %} d-flex" href="{% url 'list-pegawai' %}">
+                <i class="ni ni-single-02 text-dark px-4"></i>
+                <span class="nav-link-text">List Pegawai</span>
+              </a>
+            </li>
+            <li class="nav-item mt-2">
+              <a class="navbt nav-link {% if request.resolver_match.url_name == 'pengaturan' %} active{% endif %} d-flex" href="{% url 'pengaturan' 1 %}">
+                <i class="ni ni-settings-gear-65 text-dark px-4"></i>
+                <span class="nav-link-text">Pengaturan</span>
+              </a>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Main content -->
+  <div class="main-content" id="panel">
+    <!-- Topnav -->
+    <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse d-flex flex-row-reverse" id="navbarSupportedContent">
+          <!-- Navbar links -->
+
+          <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+            <li class="nav-item dropdown">
+              <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="media align-items-center">
+                  <span class="avatar avatar-sm rounded-circle" style="overflow: hidden;">
+                    <img alt="" src="{{user.image.url}}">
+                  </span>
+                  <div class="media-body  ml-2  d-none d-lg-block">
+                    <span class="mb-0 text-sm  font-weight-bold">{{user.name}}</span>
+                  </div>
+                </div>
+              </a>
+              <div class="dropdown-menu  dropdown-menu-right ">
+                <div class="dropdown-header noti-title">
+                  <h6 class="text-overflow m-0">Welcome!</h6>
+                </div>
+                <a class="dropdown-item d-flex">
+                  <button type="button" class="btn btn-danger flex-fill" data-toggle="modal" data-target="#exampleModal">
+                    <i class="ni ni-user-run"></i>
+                    <span>Logout</span>
+                  </button>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Apakah anda ingin log out?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">      
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="{% url 'logout' %}" class="d-flex">
+          <button type="button" class="btn btn-danger flex-fill" data-toggle="modal" data-target="#exampleModal">Logout</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+

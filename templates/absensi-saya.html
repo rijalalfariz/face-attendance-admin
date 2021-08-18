@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Hadir{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+{% load static %}
+
+<div class="container pt-8">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                    <h1 class="p-4">Daftar Hadir</h1>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="w-50" scope="col">Nama</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for pegawai in list_pegawai %}
+                                <tr>
+                                    <th scope="row">
+                                        {{pegawai.nama}}
+                                    </th>
+                                    <td>
+                                    {% if pegawai.status %}
+                                        <span class="badge badge-pill badge-success">Hadir</span>
+                                    {% else %}
+                                        <span class="badge badge-pill badge-danger">Belum Hadir</span>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}

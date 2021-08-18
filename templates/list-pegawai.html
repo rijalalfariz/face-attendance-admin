@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}List Pegawai{% endblock %}
+{% block content %}
+{% if user.is_authenticated and user.is_staff %}
+{% load static %}
+{% include 'components/navbar.html' %}
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h2 class="mb-0">List Pegawai</h2>
+                  <span class="mt-2" id="tanggal"></span>
+                </div>
+                <div class="col text-right">
+                  <a href="{% url 'tambah-pegawai' %}" class="btn btn-sm btn-primary">Tambah Pegawai</a>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th></th>
+                    <th class="w-50" scope="col">Nama</th>
+                    <th class="w-50" scope="col">NIP</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                {% for pegawai in list_pegawai %}
+                  <tr>
+                    <td>
+                      <span class="avatar avatar-sm rounded-circle" style="overflow: hidden;">
+                        <img alt="" src="{{pegawai.image.url}}" class="avatar" style="width: auto;">
+                      </span>
+                    </td>
+                    <th scope="row">
+
+                      {{pegawai.name}}
+                    </th>
+                    <td>
+                      {{pegawai.nip}}
+                    </td>
+                    <td>
+                    <a href="{% url 'edit-pegawai' pegawai.id %}" class="btn btn-sm btn-primary">Edit Pegawai</a>
+                    </td>
+                    <td data-url="{{pegawai.delete_url}}" class="comfirm-delete">
+                    <a href="" class="btn btn-sm btn-danger">Hapus Pegawai</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        {% include 'components/footer.html' %}
+      </div>
+    </div>
+
+
+<script>
+$(document).ready(function () {
+ $(".comfirm-delete").click(function (e) {
+ e.preventDefault();
+        var proceed = confirm('Hapus pegawai?');
+        if (proceed == true) {
+        var endpoint = $(this).attr('data-url')
+                $.ajax({
+                    method: 'GET',
+                    url: endpoint,
+                    success: function (data) {
+                        $.notify({
+                            // options
+                            title: '<b>Message<b> ',
+                            message: data.message,
+                        }, {
+                            // settings
+                            type: 'success',
+                            delay: 3000,
+                            allow_dismiss: true,
+
+                        });
+                        $("#item" + data.ref).hide(1000)
+
+                    },
+                    error: function (error_data) {
+                        console.log(error_data);
+                        $.notify({
+                title: '<b>Error</b><br>',
+                message: 'Sorry, something gone wrong'
+            }, {
+                type: 'danger',
+                delay: 3000,
+            })
+                    }
+                })
+            
+        } else {
+            e.preventDefault();
+            $.notify({
+                title: '<b>Action cancelled</b><br>',
+                message: 'This one is not <span class="text-danger">Deleted</span>'
+            }, {
+                type: 'info',
+                delay: 3000,
+            })
+        }
+    })
+
+
+})
+</script>
+
+
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}
+
+

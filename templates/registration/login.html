@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="container pt-8">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                    <h1 class="p-4">Log In</h1>
+
+                    <form role="form" method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+
+                        <div class="form-group mb-3">
+                            <div class="input-group input-group-merge input-group-alternative">
+
+                                {% if field.label == 'Nip' %}
+                                <input class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" type="text"/>                            
+                                {% elif field.label == 'Password' %}
+                                <input class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" placeholder="{{ field.label }}" type="password"/>                            
+                                {% endif %}
+                                {{ field.errors }}
+
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary my-4">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

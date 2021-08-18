@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}Daftar Hadir{% endblock %}
+{% block content %}
+{% if user.is_authenticated and user.is_staff %}
+{% load static %}
+{% include 'components/navbar.html' %}
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h2 class="mb-0">Daftar Hadir</h2>
+                  <span class="mt-2" id="tanggal"></span>
+                </div>
+
+                <div class="col-4">
+                  <form class="d-flex" method="POST">
+                    {% csrf_token %}
+                    <input class="form-control form-control-sm mx-2" type="date" id="tanggal" name="tanggal" value="{{ hari_ini }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Id Absensi</th>
+                    <th class="w-50" scope="col">Nama</th>
+                    <th scope="col">Kamera</th>
+                    <th scope="col">Waktu Kedatangan</th>
+                    <th scope="col">Terakhir Dilihat</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                {% for absensi in list_absensi %}
+                  <tr>
+                    <td>
+                    {{absensi.id}}
+                    </td>
+                    <th scope="row">
+                    {{absensi.employee.name}}
+                    </th>
+                    <td>
+                    {{absensi.kamera.nama_kamera}}
+                    </td>
+                    <td>
+                    {{absensi.first_seen|date:"g:i a"}}
+                    </td>
+                    <td>
+                    {{absensi.last_seen|date:"g:i a"}}
+                    </td>
+                  </tr>
+                {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h2 class="mb-0">Karyawan</h2>
+                  <span class="mt-2" id="tanggal"></span>
+                </div>
+
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th class="w-50" scope="col">Nama</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                {% for pegawai in list_pegawai %}
+                  <tr>
+                    <th scope="row">
+                    {{pegawai.nama}}
+                    </th>
+                    <td>
+                    {% if pegawai.status %}
+                      <span class="badge badge-pill badge-success">Hadir</span>
+                    {% else %}
+                      <span class="badge badge-pill badge-danger">Belum Hadir</span>
+                    {% endif %}
+                    </td>
+                    {% comment %} <td>
+                    {{pegawai.id_absensi.id}}
+                    </td> {% endcomment %}
+                  </tr>
+                {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {% include 'components/footer.html' %}
+      </div>
+    </div>
+
+
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}
+

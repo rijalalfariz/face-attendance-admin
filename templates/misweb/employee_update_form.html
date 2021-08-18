@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Edit Pegawai{% endblock %}
+{% block content %}
+{% if user.is_authenticated and user.is_staff %}
+{% load static %}
+{% include 'components/navbar.html' %}
+
+
+<div class="container p-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+
+                    <div class="row justify-content-center">
+                            <div class="" style="overflow: hidden;width:140px;height:140px;">
+                                <a href="{{object.image.url}}" >
+                                    <img src="{{object.image.url}}" class="" style="height: 140px;width: 140px;border-radius: 50%;object-fit: cover;">
+                                </a>
+                            </div>
+                    </div>
+                    
+                    <h1 class="text-center p-4">Edit Pegawai</h1>
+
+                    <form autocomplete="off" role="form"  method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {% if field.label != 'Is staff' %}
+                        <div class="form-group mb-3">
+                        <label>
+                        {{field.label}}
+                        </label>
+                            <div class="input-group input-group-merge input-group-alternative">
+
+                                <input
+                                class="form-control"
+                                id="{{ field.id_for_label }}"
+                                name="{{ field.html_name }}"
+                                placeholder="{% if field.label != 'Password' %}{{ field.label }}{% else %}New password (fill blank to use old password){% endif %}"
+                                {% if field.label == 'Nip' %}
+                                style="-webkit-appearance: none;-moz-appearance: textfield;"
+                                {% endif %}
+
+                                type="{% if field.label == 'Password' %}password{% elif field.label == 'Image' %}file{% elif field.label == 'Nip' %}number{% endif %}"
+                                
+                                value="{% if field.label != 'Password' %}{{ field.value }}{% endif %}"
+                                />                            
+
+                                {{ field.errors }}
+
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="custom-control custom-switch ml-8"> 
+                            <input type="checkbox" class="custom-control-input" {% if field.value %}checked=""{% endif %} name="{{ field.html_name }}" id="{{ field.id_for_label }}">
+                            <label class="custom-control-label" for="{{ field.id_for_label }}">{{field.label}}</label>
+                        </div>
+                    
+                    {% endif %}
+                    {% endfor %}
+
+
+                        <div class="row mt-4 justify-content-end">
+                            <a href="{% url 'list-pegawai' %}" class="btn btn-danger mr-4">Batal</a>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}

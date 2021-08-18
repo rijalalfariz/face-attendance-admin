@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Tambah Pegawai{% endblock %}
+{% block content %}
+{% if user.is_authenticated and user.is_staff %}
+{% load static %}
+{% include 'components/navbar.html' %}
+
+
+<div class="container p-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                <span class="row justify-content-center"><i class="fas fa-id-card fa-4x"></i>
+                </span>
+                    <h1 class="text-center p-4">Tambah Pegawai</h1>
+
+                    <form role="form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+
+                        <div class="form-group mb-3">
+                            <div class="input-group input-group-merge input-group-alternative">
+
+                                
+                                <input
+                                class="form-control"
+                                id="{{ field.id_for_label }}"
+                                name="{{ field.html_name }}"
+                                placeholder="{{ field.label }}"
+                                {% if field.label == 'Nip' %}
+                                style="-webkit-appearance: none;-moz-appearance: textfield;"
+                                {% endif %}
+
+                                type="{% if field.label == 'Password' or field.label == 'Password confirmation' %}password{% elif field.label == 'Image' %}file{% elif field.label == 'Nip' %}number{% endif %}"
+                                />                            
+
+                                {{ field.errors }}
+
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+
+                        <div class="row mt-4 justify-content-end">
+                            <a href="{% url 'list-pegawai' %}" class="btn btn-danger mr-4">Batal</a>
+                            <button type="submit" class="btn btn-primary">Tambah</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}

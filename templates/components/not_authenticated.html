@@ -1,0 +1,35 @@
+{% if user.is_authenticated %}
+<div class="container pt-8">
+    <div class="row justify-content-center mx-6">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+            <form  class="p-4" action="{% url 'absensi-saya' %}">
+                <div class="card-body d-flex justify-content-center flex-column">
+                    <h1 class="text-center mb-4">Anda bukan admin</h1>
+                    
+                    <button type="submit" class="btn btn-primary">Pergi ke halaman absensi pegawai</button>
+                    
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container pt-8">
+    <div class="row justify-content-center mx-6">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+            <form  class="p-4" action="{% url 'login' %}">
+                <div class="card-body d-flex justify-content-center flex-column">
+                    <h1 class="text-center mb-4">You are not logged in</h1>
+                    
+                    <button type="submit" class="btn btn-primary">Go To Log In Page</button>
+                    
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

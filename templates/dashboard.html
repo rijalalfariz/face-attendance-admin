@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated and user.is_staff %}
+
+{% load static %}
+
+{% include 'components/navbar.html' %}
+
+    <!-- Page content -->
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h2 class="mb-0">Absensi Hari ini</h2>
+                  <span class="mt-2" id="tanggal"></span>
+                </div>
+                <div class="col text-right">
+                  <a href="{% url 'daftar-hadir' %}" class="btn btn-sm btn-primary">Lihat detail</a>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th class="w-50" scope="col">Nama</th>
+                    <th scope="col">Waktu Kedatangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for absensi in list_absensi %}
+                  <tr>
+                    <th scope="row">
+                    {{absensi.employee.name}}
+                    </th>
+                    <td>
+                    {{absensi.first_seen|date:"g:i a"}}
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Kehadiran</h5>
+                  <span class="h2 font-weight-bold mb-0">{{ jml_absensi }}/{{ jml_pegawai }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                    <i class="ni ni-chart-bar-32"></i>
+                  </div>
+                </div>
+              </div>
+                <div class="progress-wrapper">
+                  <div class="progress-info">
+                    <div class="progress-percentage">
+                      <span>{{ rasio }}%</span>
+                    </div>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="{{ rasio }}" aria-valuemin="0" aria-valuemax="100" style="width: {{rasio}}%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% include 'components/footer.html' %}
+      </div>
+    </div>
+
+<script>
+  const d = new Date();
+  const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+  document.getElementById("tanggal").innerHTML = days[d.getDay()] + ", " + d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+</script>
+{% elif user.is_authenticated and not user.is_staff %}
+{% include 'absensi-saya.html' %}
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}

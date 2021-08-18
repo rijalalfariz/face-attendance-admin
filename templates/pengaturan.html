@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}LPengaturan{% endblock %}
+{% block content %}
+{% if user.is_authenticated and user.is_staff %}
+{% load static %}
+{% include 'components/navbar.html' %}
+
+
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col-5">
+                  <h2 class="mb-0">Pengaturan</h2>
+                </div>
+                <div class="col-3 text-right">
+                  <span class="mb-0">Simpan Pengaturan untuk:</span>
+                </div>
+                <div class="col-4">
+                  <form class="d-flex" method="POST">
+                    {% csrf_token %}
+  
+                    <select class="form-control form-control-sm mx-2" id="for-camera" name="for-camera" placeholder="hii">
+                    {% for cam in list_kamera %}
+                      <option value="{{ cam.id }}" {% if cam.id == kamera.id %} selected {% endif %}>{{ cam.nama_kamera }}</option>
+                    {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+
+                  </form>
+                </div>                
+              </div>
+            </div>
+            <div class="p-4">
+
+              <div class="row my-2">
+                <div class="col-4 my-auto">
+                  <span>Periode Absensi</span>                
+                </div>
+
+                <div class="col-1 d-flex flex-column">
+                  <span class="badge badge-primary mt-2 mb-3">Hari</span>                
+                  <span class="badge badge-primary mt-1 mb-2">Mulai</span>
+                  <span class="badge badge-primary my-2">Selesai</span>
+                </div>
+
+                <div class="col-7">
+                    <div id="businessHoursContainer1"></div>
+                    <div class="clean">&nbsp;</div>
+                </div>
+
+              </div>
+            
+              <div class="row my-4">
+                <div class="col-5 my-auto">
+                  <span>Ukuran Wajah Minimal</span>                
+                </div>
+                <div class="col-md-auto">
+                  <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" min="10" max="90">
+                    <div class="input-group-append">
+                      <span class="input-group-text" style="line-height: 1;" id="inputGroup-sizing-sm">% dari ukuran input kamera</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+              <div class="row my-4">
+                <div class="col-5 my-auto">
+                  <span>Ambang batas deteksi wajah</span>                
+                </div>
+                <div class="col-2">
+                  <input type="number" class="form-control form-control-sm" placeholder="" step=".01" min="0.1" max="0.9">
+                </div>
+              </div>
+            
+              <div class="row my-4">
+                <div class="col-5 my-auto">
+                  <span>Ambang batas deteksi keaslian</span>                
+                </div>
+                <div class="col-2">
+                  <input type="number" class="form-control form-control-sm" placeholder="" step=".01" min="0.1" max="0.9">
+                </div>
+              </div>
+            
+              <div class="row">
+                <div class="col-4 my-auto">
+                  <span>Ukuran input kamera</span>                
+                </div>
+                <div class="col-1 d-flex flex-column">
+                  <span class="badge badge-primary my-2">Width</span>
+                </div>
+                <div class="col-md-auto">
+                  <div class="input-group input-group-sm mb-3">
+                    <input type="number" class="form-control" step="10" min="320" max="1920">
+                    <div class="input-group-append">
+                      <span class="input-group-text" style="line-height: 1;" id="inputGroup-sizing-sm">Px</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-1 d-flex flex-column">
+                  <span class="badge badge-primary my-2">Height</span>
+                </div>
+                <div class="col-md-auto">
+                  <div class="input-group input-group-sm mb-3">
+                    <input type="number" class="form-control" step="10" min="180" max="1080">
+                    <div class="input-group-append">
+                      <span class="input-group-text" style="line-height: 1;" id="inputGroup-sizing-sm">Px</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+            </div>
+            <div class="d-flex flex-row-reverse p-4">
+              <button type="button" class="btn btn-success">Simpan</button>
+              <button type="button" class="btn btn-primary mx-4">Kembali ke Default</button>
+            </div>
+          </div> <!--card-->
+        </div>
+
+        {% include 'components/footer.html' %}
+
+      </div>
+    </div>
+
+
+    <script>
+        (function() {
+            Rainbow.color();
+            var jadwal_str = "{{kamera.periode_absensi}}";
+            var jadwal = jQuery.parseJSON(jadwal_str.replace(/&quot;/ig,'"'));
+
+            var businessHoursManager1 = $("#businessHoursContainer1").businessHours({
+              dayTmpl: '<div class="dayContainer" style="width: 80px;">' +
+                        '<div data-original-title="" class="colorBox" style="height: 20px;"><input type="checkbox" class="invisible operationState"/></div>' +
+                        '<div class="weekday"></div>' +
+                        '<div class="operationDayTimeContainer">' +
+                        '<div class="operationTime input-group"><input type="text" name="startTime" class="form-control form-control-sm operationTimeFrom" value=""/></div>' +
+                        '<div class="operationTime input-group"><input type="text" name="endTime" class="form-control form-control-sm operationTimeTill" value=""/></div>' +
+                        '</div></div>',
+              operationTime: jadwal,
+                        });
+            $("#btnSerialize").click(function() {
+                $("#businessHoursOutput1").val(jadwal);
+            });
+
+            $("#btnInit").click(function() {
+                try{
+                    var businessHours = jQuery.parseJSON($("#businessHoursData").val());
+                    $("#businessHoursContainerJson").businessHours({
+                        operationTime: businessHours,
+                    });
+                }catch(e) {
+                    alert("JSON non valid: " + e.message);
+                }
+            });
+
+            var businessHoursManager2 = $("#businessHoursContainer2").businessHours({
+                checkedColorClass: "workingBusinssDay",
+                inputDisabled: true,
+                uncheckedColorClass: "dayOff",
+                dayTmpl: '<div class="dayContainer">' +
+                        '<div data-original-title="" class="colorBox"><input type="checkbox" class="invisible operationState"/></div>' +
+                        '<div class="weekday"></div></div>'
+            });
+
+            var b3 = $("#businessHoursContainer3");
+            var businessHoursManagerBootstrap = b3.businessHours({
+                postInit:function(){
+                    b3.find('.operationTimeFrom, .operationTimeTill').timepicker({
+                        'timeFormat': 'H:i',
+                        'step': 15
+                    });
+                },
+                dayTmpl: '<div class="dayContainer" style="width: 80px;">' +
+                        '<div data-original-title="" class="colorBox"><input type="checkbox" class="invisible operationState"/></div>' +
+                        '<div class="weekday"></div>' +
+                        '<div class="operationDayTimeContainer">' +
+                        '<div class="operationTime input-group"><span class="input-group-addon"><i class="fa fa-sun-o"></i></span><input type="text" name="startTime" class="mini-time form-control operationTimeFrom" value=""/></div>' +
+                        '<div class="operationTime input-group"><span class="input-group-addon"><i class="fa fa-moon-o"></i></span><input type="text" name="endTime" class="mini-time form-control operationTimeTill" value=""/></div>' +
+                        '</div></div>'
+            });
+        })();
+    </script>
+
+
+{% else %}
+{% include 'components/not_authenticated.html' %}
+{% endif %}
+{% endblock %}
+
+
