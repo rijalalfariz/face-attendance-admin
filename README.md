@@ -10,11 +10,10 @@ This projects have camera programs that run in Raspberry pi 3 up to 10+ fps (see
 
 ## Dependencies
 
-Python
-MySQL Database (You can change yours also)
-XAMPP
-+
-See requirements.txt
+- Python
+- MySQL Database (You can change yours also)
+- XAMPP
+- + requirements.txt
 
 ---
 
